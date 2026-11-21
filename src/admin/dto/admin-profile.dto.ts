@@ -16,4 +16,3 @@ export class AdminProfileDto {
   @ApiProperty({ example: '2026-11-21T14:00:00.000Z' })
   createdAt: Date;
 }
-

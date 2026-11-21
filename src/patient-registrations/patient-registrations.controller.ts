@@ -1,22 +1,22 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Patch, 
-  Param, 
-  Delete, 
-  Query, 
-  HttpCode, 
-  HttpStatus 
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
-import { 
-  ApiTags, 
-  ApiOperation, 
-  ApiResponse, 
-  ApiParam, 
-  ApiQuery, 
-  ApiBody 
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiBody,
 } from '@nestjs/swagger';
 import { PatientRegistrationsService } from './patient-registrations.service.js';
 import { CreatePatientRegistrationDto } from './dto/create-patient-registration.dto.js';
@@ -26,13 +26,16 @@ import { QueryPatientRegistrationDto } from './dto/query-patient-registration.dt
 @ApiTags('Patient Registrations')
 @Controller('patient-registrations')
 export class PatientRegistrationsController {
-  constructor(private readonly patientRegistrationsService: PatientRegistrationsService) {}
+  constructor(
+    private readonly patientRegistrationsService: PatientRegistrationsService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Register a new patient',
-    description: 'Registers a patient with demographic identity, body measurements, and blood pressure vitals. The registration timestamp is securely generated on the server.',
+    description:
+      'Registers a patient with demographic identity, body measurements, and blood pressure vitals. The registration timestamp is securely generated on the server.',
   })
   @ApiBody({ type: CreatePatientRegistrationDto })
   @ApiResponse({
@@ -65,7 +68,8 @@ export class PatientRegistrationsController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Validation failed - Invalid input fields or missing required properties.',
+    description:
+      'Validation failed - Invalid input fields or missing required properties.',
   })
   create(@Body() createDto: CreatePatientRegistrationDto) {
     return this.patientRegistrationsService.create(createDto);
@@ -75,10 +79,23 @@ export class PatientRegistrationsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get all patient registrations (paginated)',
-    description: 'Retrieves a paginated list of patient registrations sorted by creation date descending.',
+    description:
+      'Retrieves a paginated list of patient registrations sorted by creation date descending.',
   })
-  @ApiQuery({ name: 'page', required: false, type: Number, example: 1, description: 'Page number' })
-  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10, description: 'Items per page' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    example: 1,
+    description: 'Page number',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    example: 10,
+    description: 'Items per page',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of patient registrations with pagination metadata.',
@@ -91,9 +108,14 @@ export class PatientRegistrationsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get a patient registration by ID',
-    description: 'Retrieves a single patient registration record using its MongoDB ObjectId.',
+    description:
+      'Retrieves a single patient registration record using its MongoDB ObjectId.',
   })
-  @ApiParam({ name: 'id', description: 'MongoDB ObjectId hex string (24 characters)', example: '673ee85fa9123b456c789012' })
+  @ApiParam({
+    name: 'id',
+    description: 'MongoDB ObjectId hex string (24 characters)',
+    example: '673ee85fa9123b456c789012',
+  })
   @ApiResponse({ status: 200, description: 'Patient registration found.' })
   @ApiResponse({ status: 400, description: 'Invalid ObjectId format.' })
   @ApiResponse({ status: 404, description: 'Patient registration not found.' })
@@ -105,14 +127,21 @@ export class PatientRegistrationsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Update an existing patient registration',
-    description: 'Updates specific patient identity, body measurements, or vitals fields for an existing record.',
+    description:
+      'Updates specific patient identity, body measurements, or vitals fields for an existing record.',
   })
   @ApiParam({ name: 'id', description: 'MongoDB ObjectId hex string' })
   @ApiBody({ type: UpdatePatientRegistrationDto })
-  @ApiResponse({ status: 200, description: 'Patient registration updated successfully.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Patient registration updated successfully.',
+  })
   @ApiResponse({ status: 400, description: 'Validation failed.' })
   @ApiResponse({ status: 404, description: 'Patient registration not found.' })
-  update(@Param('id') id: string, @Body() updateDto: UpdatePatientRegistrationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateDto: UpdatePatientRegistrationDto,
+  ) {
     return this.patientRegistrationsService.update(id, updateDto);
   }
 
@@ -120,14 +149,17 @@ export class PatientRegistrationsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Delete a patient registration',
-    description: 'Deletes a patient registration record by ID from the MongoDB collection.',
+    description:
+      'Deletes a patient registration record by ID from the MongoDB collection.',
   })
   @ApiParam({ name: 'id', description: 'MongoDB ObjectId hex string' })
-  @ApiResponse({ status: 200, description: 'Patient registration deleted successfully.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Patient registration deleted successfully.',
+  })
   @ApiResponse({ status: 400, description: 'Invalid ObjectId format.' })
   @ApiResponse({ status: 404, description: 'Patient registration not found.' })
   remove(@Param('id') id: string) {
     return this.patientRegistrationsService.remove(id);
   }
 }
-

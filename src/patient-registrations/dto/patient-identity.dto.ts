@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsInt, IsNotEmpty, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import {
+  IsIn,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class PatientIdentityDto {
   @ApiProperty({
@@ -33,4 +42,3 @@ export class PatientIdentityDto {
   @IsIn(['Male', 'Female'], { message: 'Gender must be either Male or Female' })
   gender: 'Male' | 'Female';
 }
-

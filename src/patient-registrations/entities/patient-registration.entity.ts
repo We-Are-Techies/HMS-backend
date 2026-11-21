@@ -1,4 +1,10 @@
-import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  ObjectIdColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ObjectId } from 'mongodb';
 
 export class PatientIdentity {
@@ -59,4 +65,3 @@ export class PatientRegistration {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
-

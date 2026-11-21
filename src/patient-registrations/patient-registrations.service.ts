@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ObjectId } from 'mongodb';
@@ -18,13 +23,19 @@ export class PatientRegistrationsService {
 
   private parseObjectId(id: string): ObjectId {
     if (!ObjectId.isValid(id)) {
-      throw new BadRequestException(`Invalid registration ID format: "${id}". Must be a valid 24-character hexadecimal ObjectId.`);
+      throw new BadRequestException(
+        `Invalid registration ID format: "${id}". Must be a valid 24-character hexadecimal ObjectId.`,
+      );
     }
     return new ObjectId(id);
   }
 
-  async create(createDto: CreatePatientRegistrationDto): Promise<PatientRegistration> {
-    this.logger.log(`Creating new patient registration for: ${createDto.patientIdentity.name}`);
+  async create(
+    createDto: CreatePatientRegistrationDto,
+  ): Promise<PatientRegistration> {
+    this.logger.log(
+      `Creating new patient registration for: ${createDto.patientIdentity.name}`,
+    );
 
     // Server-side audit timestamp generation (not trusted from client)
     const now = new Date();
@@ -52,7 +63,9 @@ export class PatientRegistrationsService {
     });
 
     const saved = await this.registrationRepo.save(registration);
-    this.logger.log(`Patient registration created successfully with ID: ${saved._id.toString()}`);
+    this.logger.log(
+      `Patient registration created successfully with ID: ${saved._id.toString()}`,
+    );
     return saved;
   }
 
@@ -86,13 +99,18 @@ export class PatientRegistrationsService {
     });
 
     if (!registration) {
-      throw new NotFoundException(`Patient registration with ID "${id}" was not found.`);
+      throw new NotFoundException(
+        `Patient registration with ID "${id}" was not found.`,
+      );
     }
 
     return registration;
   }
 
-  async update(id: string, updateDto: UpdatePatientRegistrationDto): Promise<PatientRegistration> {
+  async update(
+    id: string,
+    updateDto: UpdatePatientRegistrationDto,
+  ): Promise<PatientRegistration> {
     const registration = await this.findOne(id);
 
     if (updateDto.patientIdentity) {
@@ -104,7 +122,10 @@ export class PatientRegistrationsService {
     }
 
     if (updateDto.bloodPressureVitals) {
-      Object.assign(registration.bloodPressureVitals, updateDto.bloodPressureVitals);
+      Object.assign(
+        registration.bloodPressureVitals,
+        updateDto.bloodPressureVitals,
+      );
     }
 
     const updated = await this.registrationRepo.save(registration);
@@ -112,7 +133,9 @@ export class PatientRegistrationsService {
     return updated;
   }
 
-  async remove(id: string): Promise<{ success: boolean; message: string; deletedId: string }> {
+  async remove(
+    id: string,
+  ): Promise<{ success: boolean; message: string; deletedId: string }> {
     const registration = await this.findOne(id);
     await this.registrationRepo.remove(registration);
     this.logger.log(`Patient registration with ID ${id} deleted successfully`);

@@ -3,14 +3,23 @@ import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class AdminQueryPatientsDto {
-  @ApiPropertyOptional({ default: 1, minimum: 1, description: 'Page number for pagination' })
+  @ApiPropertyOptional({
+    default: 1,
+    minimum: 1,
+    description: 'Page number for pagination',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
   page: number = 1;
 
-  @ApiPropertyOptional({ default: 10, minimum: 1, maximum: 100, description: 'Number of records per page' })
+  @ApiPropertyOptional({
+    default: 10,
+    minimum: 1,
+    maximum: 100,
+    description: 'Number of records per page',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -18,14 +27,17 @@ export class AdminQueryPatientsDto {
   @Max(100)
   limit: number = 10;
 
-  @ApiPropertyOptional({ description: 'Search patients by name (case-insensitive substring match)' })
+  @ApiPropertyOptional({
+    description: 'Search patients by name (case-insensitive substring match)',
+  })
   @IsOptional()
   @IsString()
   search?: string;
 
-  @ApiPropertyOptional({ description: 'Filter by registration date (e.g. 2026-11-21)' })
+  @ApiPropertyOptional({
+    description: 'Filter by registration date (e.g. 2026-11-21)',
+  })
   @IsOptional()
   @IsString()
   date?: string;
 }
-

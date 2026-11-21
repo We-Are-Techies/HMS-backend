@@ -1,4 +1,10 @@
-import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  ObjectIdColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ObjectId } from 'mongodb';
 
 @Entity('admins')
@@ -24,4 +30,3 @@ export class Admin {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
-

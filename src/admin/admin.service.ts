@@ -1,10 +1,10 @@
-import { 
-  Injectable, 
-  UnauthorizedException, 
-  NotFoundException, 
-  BadRequestException, 
-  Logger, 
-  OnApplicationBootstrap 
+import {
+  Injectable,
+  UnauthorizedException,
+  NotFoundException,
+  BadRequestException,
+  Logger,
+  OnApplicationBootstrap,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -38,9 +38,17 @@ export class AdminService implements OnApplicationBootstrap {
     try {
       const existingAdmin = await this.adminRepo.findOne({ where: {} as any });
       if (!existingAdmin) {
-        const defaultEmail = this.configService.get<string>('ADMIN_DEFAULT_EMAIL', 'admin@varmanursinghome.com').toLowerCase();
-        const defaultPassword = this.configService.get<string>('ADMIN_DEFAULT_PASSWORD', 'Admin@Varma2026');
-        const defaultName = this.configService.get<string>('ADMIN_DEFAULT_NAME', 'Varma Admin');
+        const defaultEmail = this.configService
+          .get<string>('ADMIN_DEFAULT_EMAIL', 'admin@varmanursinghome.com')
+          .toLowerCase();
+        const defaultPassword = this.configService.get<string>(
+          'ADMIN_DEFAULT_PASSWORD',
+          'Admin@Varma2026',
+        );
+        const defaultName = this.configService.get<string>(
+          'ADMIN_DEFAULT_NAME',
+          'Varma Admin',
+        );
 
         const hashedPassword = await bcrypt.hash(defaultPassword, 10);
         const admin = this.adminRepo.create({
@@ -51,12 +59,16 @@ export class AdminService implements OnApplicationBootstrap {
         });
 
         await this.adminRepo.save(admin);
-        this.logger.log(`Initial admin account created successfully (${defaultEmail})`);
+        this.logger.log(
+          `Initial admin account created successfully (${defaultEmail})`,
+        );
       } else {
         this.logger.log('Admin account verified in MongoDB database.');
       }
     } catch (err: any) {
-      this.logger.warn(`Could not complete admin account auto-seed: ${err.message}`);
+      this.logger.warn(
+        `Could not complete admin account auto-seed: ${err.message}`,
+      );
     }
   }
 
@@ -73,7 +85,10 @@ export class AdminService implements OnApplicationBootstrap {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, admin.password);
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      admin.password,
+    );
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -201,9 +216,10 @@ export class AdminService implements OnApplicationBootstrap {
     // Name search filter
     if (query.search && query.search.trim()) {
       const term = query.search.trim().toLowerCase();
-      records = records.filter((r) =>
-        r.patientIdentity?.name?.toLowerCase().includes(term) ||
-        r._id?.toString()?.toLowerCase().includes(term),
+      records = records.filter(
+        (r) =>
+          r.patientIdentity?.name?.toLowerCase().includes(term) ||
+          r._id?.toString()?.toLowerCase().includes(term),
       );
     }
 
@@ -244,7 +260,9 @@ export class AdminService implements OnApplicationBootstrap {
    */
   async findPatientById(id: string) {
     if (!ObjectId.isValid(id)) {
-      throw new BadRequestException(`Invalid registration ID: "${id}". Must be a valid 24-character hexadecimal ObjectId.`);
+      throw new BadRequestException(
+        `Invalid registration ID: "${id}". Must be a valid 24-character hexadecimal ObjectId.`,
+      );
     }
 
     const record = await this.patientRepo.findOne({
@@ -252,7 +270,9 @@ export class AdminService implements OnApplicationBootstrap {
     });
 
     if (!record) {
-      throw new NotFoundException(`Patient registration with ID "${id}" was not found.`);
+      throw new NotFoundException(
+        `Patient registration with ID "${id}" was not found.`,
+      );
     }
 
     return {
@@ -261,4 +281,3 @@ export class AdminService implements OnApplicationBootstrap {
     };
   }
 }
-

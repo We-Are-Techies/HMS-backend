@@ -1,19 +1,19 @@
-import { 
-  Controller, 
-  Post, 
-  Get, 
-  Body, 
-  Res, 
-  UseGuards, 
-  HttpCode, 
-  HttpStatus 
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Res,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
-import { 
-  ApiTags, 
-  ApiOperation, 
-  ApiResponse, 
-  ApiBearerAuth, 
-  ApiCookieAuth 
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { AdminService } from '../admin.service.js';
@@ -31,7 +31,8 @@ export class AdminAuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Admin login',
-    description: 'Authenticates admin credentials from MongoDB, returns JWT access token, and sets secure HTTP-only cookie.',
+    description:
+      'Authenticates admin credentials from MongoDB, returns JWT access token, and sets secure HTTP-only cookie.',
   })
   @ApiResponse({ status: 200, description: 'Admin login successful.' })
   @ApiResponse({ status: 401, description: 'Invalid email or password.' })
@@ -59,10 +60,18 @@ export class AdminAuthController {
   @ApiCookieAuth('admin_token')
   @ApiOperation({
     summary: 'Get current admin profile',
-    description: 'Retrieves profile information for the currently authenticated admin session.',
+    description:
+      'Retrieves profile information for the currently authenticated admin session.',
   })
-  @ApiResponse({ status: 200, type: AdminProfileDto, description: 'Authenticated admin profile.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized - Missing or expired JWT token.' })
+  @ApiResponse({
+    status: 200,
+    type: AdminProfileDto,
+    description: 'Authenticated admin profile.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Missing or expired JWT token.',
+  })
   getProfile(@CurrentAdmin() admin: any) {
     return {
       statusCode: 200,
@@ -70,4 +79,3 @@ export class AdminAuthController {
     };
   }
 }
-

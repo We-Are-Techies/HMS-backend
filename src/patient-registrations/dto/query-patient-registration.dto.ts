@@ -3,14 +3,23 @@ import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
 export class QueryPatientRegistrationDto {
-  @ApiPropertyOptional({ default: 1, minimum: 1, description: 'Page number for pagination' })
+  @ApiPropertyOptional({
+    default: 1,
+    minimum: 1,
+    description: 'Page number for pagination',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
   page: number = 1;
 
-  @ApiPropertyOptional({ default: 10, minimum: 1, maximum: 100, description: 'Number of records per page' })
+  @ApiPropertyOptional({
+    default: 10,
+    minimum: 1,
+    maximum: 100,
+    description: 'Number of records per page',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -18,4 +27,3 @@ export class QueryPatientRegistrationDto {
   @Max(100)
   limit: number = 10;
 }
-
