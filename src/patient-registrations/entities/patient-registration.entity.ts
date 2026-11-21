@@ -59,3 +59,4 @@ export class PatientRegistration {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
+

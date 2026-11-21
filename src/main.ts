@@ -1,14 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS for frontend integration
+  // Enable cookie parsing for JWT HTTP-only cookies
+  app.use(cookieParser());
+
+  // Enable CORS with credentials for frontend cookie transmission
   app.enableCors({
-    origin: true,
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
@@ -16,7 +20,7 @@ async function bootstrap() {
   // Set global API prefix
   app.setGlobalPrefix('api');
 
-  // Centrally configure URI-based API versioning (e.g., /api/v1/patient-registrations)
+  // Centrally configure URI-based API versioning (e.g., /api/v1/admin/auth/login)
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
@@ -36,12 +40,29 @@ async function bootstrap() {
 
   // Configure Swagger documentation at /api/docs
   const config = new DocumentBuilder()
-    .setTitle('Varma Nursing Home - Patient Registration API')
+    .setTitle('Varma Nursing Home - Hospital Management System API')
     .setDescription(
-      'Enterprise REST API documentation for Varma Nursing Home patient registration, clinical vitals, body measurements, and intake management.',
+      'Enterprise REST API documentation for Varma Nursing Home patient registration, clinical vitals, intake management, and admin dashboard operations.',
     )
     .setVersion('1.0')
-    .addTag('Patient Registrations', 'APIs for creating, querying, updating, and deleting clinical patient registrations')
+    .addTag('Patient Registrations', 'Public APIs for registering clinical patients and vitals')
+    .addTag('Admin Auth', 'APIs for admin authentication, JWT session cookies, and admin profile')
+    .addTag('Admin Dashboard & Patient Management', 'Protected APIs for analytics, dashboard metrics, and patient management')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Enter your JWT access token (optional if session cookie is present)',
+      },
+      'bearer-jwt',
+    )
+    .addCookieAuth('admin_token', {
+      type: 'apiKey',
+      in: 'cookie',
+      name: 'admin_token',
+      description: 'HTTP-only session cookie set upon successful admin login',
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -54,6 +75,6 @@ async function bootstrap() {
 
   console.log(`HMS Backend running on http://localhost:${port}`);
   console.log(`Swagger UI available at http://localhost:${port}/api/docs`);
-  console.log(`API v1 Endpoint: http://localhost:${port}/api/v1/patient-registrations`);
+  console.log(`Admin APIs active under /api/v1/admin/*`);
 }
 await bootstrap();

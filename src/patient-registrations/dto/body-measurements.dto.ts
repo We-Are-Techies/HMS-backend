@@ -26,3 +26,4 @@ export class BodyMeasurementsDto {
   @Max(500, { message: 'Weight must not exceed 500 kg' })
   weight: number;
 }
+

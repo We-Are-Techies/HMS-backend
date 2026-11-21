@@ -18,3 +18,4 @@ export class QueryPatientRegistrationDto {
   @Max(100)
   limit: number = 10;
 }
+

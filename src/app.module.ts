@@ -5,6 +5,8 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { PatientRegistrationsModule } from './patient-registrations/patient-registrations.module.js';
 import { PatientRegistration } from './patient-registrations/entities/patient-registration.entity.js';
+import { AdminModule } from './admin/admin.module.js';
+import { Admin } from './admin/entities/admin.entity.js';
 
 @Module({
   imports: [
@@ -18,12 +20,13 @@ import { PatientRegistration } from './patient-registrations/entities/patient-re
         type: 'mongodb',
         url: configService.get<string>('MONGODB_URI', 'mongodb://127.0.0.1:27017/varma_nursing_home'),
         database: configService.get<string>('MONGODB_DATABASE', 'varma_nursing_home'),
-        entities: [PatientRegistration],
+        entities: [PatientRegistration, Admin],
         synchronize: true,
         autoLoadEntities: true,
       }),
     }),
     PatientRegistrationsModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

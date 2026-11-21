@@ -130,3 +130,4 @@ export class PatientRegistrationsController {
     return this.patientRegistrationsService.remove(id);
   }
 }
+

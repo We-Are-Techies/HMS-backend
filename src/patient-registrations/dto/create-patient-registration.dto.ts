@@ -24,3 +24,4 @@ export class CreatePatientRegistrationDto {
   @Type(() => BloodPressureVitalsDto)
   bloodPressureVitals: BloodPressureVitalsDto;
 }
+

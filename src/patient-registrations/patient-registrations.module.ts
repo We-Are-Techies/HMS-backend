@@ -11,3 +11,4 @@ import { PatientRegistrationsController } from './patient-registrations.controll
   exports: [PatientRegistrationsService],
 })
 export class PatientRegistrationsModule {}
+
