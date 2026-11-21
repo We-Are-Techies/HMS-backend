@@ -62,3 +62,4 @@ export class AdminDashboardController {
     return this.adminService.findPatientById(id);
   }
 }
+

@@ -16,3 +16,4 @@ export class DashboardStatsDto {
   @ApiProperty({ description: 'List of the 5 most recent patient registrations' })
   recentRegistrations: any[];
 }
+

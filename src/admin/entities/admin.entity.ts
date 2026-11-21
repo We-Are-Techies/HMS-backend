@@ -24,3 +24,4 @@ export class Admin {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
+
