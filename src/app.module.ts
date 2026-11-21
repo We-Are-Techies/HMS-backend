@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-
-export const { ObserveModule, ObserveInstrument } = createObserveModule();
+import { PatientRegistrationsModule } from './patient-registrations/patient-registrations.module.js';
+import { PatientRegistration } from './patient-registrations/entities/patient-registration.entity.js';
 
 @Module({
   imports: [
@@ -17,17 +16,14 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'mongodb',
-        url: configService.get<string>('MONGODB_URI', 'mongodb://localhost:27017/hms_db'),
-        database: configService.get<string>('MONGODB_DATABASE', 'hms_db'),
+        url: configService.get<string>('MONGODB_URI', 'mongodb://127.0.0.1:27017/varma_nursing_home'),
+        database: configService.get<string>('MONGODB_DATABASE', 'varma_nursing_home'),
+        entities: [PatientRegistration],
         synchronize: true,
         autoLoadEntities: true,
       }),
     }),
-    ObserveModule.forRoot({
-      appKey: process.env.OBSERVE_APP_KEY ?? 'YOUR_APP_KEY',
-      appSecret: process.env.OBSERVE_APP_SECRET ?? 'YOUR_APP_SECRET',
-      serviceId: 'hms-backend',
-    }),
+    PatientRegistrationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
