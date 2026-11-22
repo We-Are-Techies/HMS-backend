@@ -26,4 +26,3 @@ export class BloodPressureVitalsDto {
   @Max(200, { message: 'Diastolic BP must not exceed 200 mmHg' })
   diastolic: number;
 }
-

@@ -23,7 +23,7 @@ import { JwtStrategy } from './strategies/jwt.strategy.js';
           'varma_nursing_home_jwt_secret_key_2026_super_secure',
         ),
         signOptions: {
-          expiresIn: (configService.get<string>('JWT_EXPIRATION', '1d') as any),
+          expiresIn: configService.get<string>('JWT_EXPIRATION', '1d') as any,
         },
       }),
     }),

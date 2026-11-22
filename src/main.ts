@@ -12,7 +12,11 @@ async function bootstrap() {
 
   // Enable CORS with credentials for frontend cookie transmission
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000'],
+    origin: [
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
+      'http://localhost:3000',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
@@ -45,15 +49,25 @@ async function bootstrap() {
       'Enterprise REST API documentation for Varma Nursing Home patient registration, clinical vitals, intake management, and admin dashboard operations.',
     )
     .setVersion('1.0')
-    .addTag('Patient Registrations', 'Public APIs for registering clinical patients and vitals')
-    .addTag('Admin Auth', 'APIs for admin authentication, JWT session cookies, and admin profile')
-    .addTag('Admin Dashboard & Patient Management', 'Protected APIs for analytics, dashboard metrics, and patient management')
+    .addTag(
+      'Patient Registrations',
+      'Public APIs for registering clinical patients and vitals',
+    )
+    .addTag(
+      'Admin Auth',
+      'APIs for admin authentication, JWT session cookies, and admin profile',
+    )
+    .addTag(
+      'Admin Dashboard & Patient Management',
+      'Protected APIs for analytics, dashboard metrics, and patient management',
+    )
     .addBearerAuth(
       {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        description: 'Enter your JWT access token (optional if session cookie is present)',
+        description:
+          'Enter your JWT access token (optional if session cookie is present)',
       },
       'bearer-jwt',
     )

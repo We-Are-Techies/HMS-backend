@@ -18,8 +18,14 @@ import { Admin } from './admin/entities/admin.entity.js';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'mongodb',
-        url: configService.get<string>('MONGODB_URI', 'mongodb://127.0.0.1:27017/varma_nursing_home'),
-        database: configService.get<string>('MONGODB_DATABASE', 'varma_nursing_home'),
+        url: configService.get<string>(
+          'MONGODB_URI',
+          'mongodb://127.0.0.1:27017/varma_nursing_home',
+        ),
+        database: configService.get<string>(
+          'MONGODB_DATABASE',
+          'varma_nursing_home',
+        ),
         entities: [PatientRegistration, Admin],
         synchronize: true,
         autoLoadEntities: true,
