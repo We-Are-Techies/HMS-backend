@@ -151,7 +151,7 @@ export class AdminService implements OnApplicationBootstrap {
       order: { createdAt: 'DESC' },
     });
 
-    const totalPatients = allPatients.length;
+    const totalPatients = new Set(allPatients.map(patient => patient.patientId ?? patient._id.toHexString())).size;
 
     // Filter today's registrations
     const todayRegistrations = allPatients.filter((p) => {
@@ -218,7 +218,8 @@ export class AdminService implements OnApplicationBootstrap {
       const term = query.search.trim().toLowerCase();
       records = records.filter(
         (r) =>
-          r.patientIdentity?.name?.toLowerCase().includes(term) ||
+          [r.patientIdentity?.title, r.patientIdentity?.name].filter(Boolean).join(' ').toLowerCase().includes(term) ||
+          String(r.patientId ?? r._id.toHexString()).includes(term) ||
           r._id?.toString()?.toLowerCase().includes(term),
       );
     }

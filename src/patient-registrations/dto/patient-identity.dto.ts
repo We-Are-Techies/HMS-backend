@@ -1,44 +1,48 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsIn,
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  Max,
-  MaxLength,
-  Min,
-  MinLength,
-} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { IsIn, IsInt, IsString, Matches, Max, Min, Length, ValidateIf } from 'class-validator';
+import { genders, patientTitles } from '../entities/patient-registration.entity.js';
+import type { Gender, PatientTitle } from '../entities/patient-registration.entity.js';
+
+export function normalizePhone(phone: string): string {
+  const digits = phone.replace(/[\s()+.-]/g, '');
+  return /^91\d{10}$/.test(digits) ? digits.slice(2) : digits;
+}
+
+export const phoneFormat = /^\+?[0-9][0-9 ().-]{5,24}$/;
 
 export class PatientIdentityDto {
-  @ApiProperty({
-    example: 'Rajesh Varma',
-    description: 'Name of the customer (patient)',
-    minLength: 2,
-    maxLength: 100,
-  })
-  @IsString({ message: 'Name must be a string' })
-  @IsNotEmpty({ message: 'Name is required' })
-  @MinLength(2, { message: 'Name must be at least 2 characters long' })
-  @MaxLength(100, { message: 'Name must not exceed 100 characters' })
+  @ApiProperty({ example: 'Rajesh Varma', minLength: 2, maxLength: 100 })
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @IsString()
+  @Length(2, 100)
   name: string;
 
-  @ApiProperty({
-    example: 42,
-    description: 'Age in years (integer, no decimals)',
-    minimum: 0,
-    maximum: 120,
-  })
-  @IsInt({ message: 'Age must be an integer (no decimals)' })
-  @Min(0, { message: 'Age cannot be negative' })
-  @Max(120, { message: 'Age cannot exceed 120 years' })
+  @ApiPropertyOptional({ enum: [...patientTitles] })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsIn(patientTitles)
+  title?: PatientTitle;
+
+  @ApiProperty({ description: 'Age in years', minimum: 0, maximum: 120 })
+  @IsInt()
+  @Min(0)
+  @Max(120)
   age: number;
 
-  @ApiProperty({
-    example: 'Male',
-    enum: ['Male', 'Female'],
-    description: 'Gender of patient (Male or Female)',
-  })
-  @IsIn(['Male', 'Female'], { message: 'Gender must be either Male or Female' })
-  gender: 'Male' | 'Female';
+  @ApiPropertyOptional({ minimum: 0, maximum: 11 })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsInt()
+  @Min(0)
+  @Max(11)
+  ageMonths?: number;
+
+  @ApiProperty({ enum: [...genders] })
+  @IsIn(genders)
+  gender: Gender;
+
+  @ApiProperty({ example: '+91 98765 43210' })
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @IsString()
+  @Matches(phoneFormat)
+  phone: string;
 }

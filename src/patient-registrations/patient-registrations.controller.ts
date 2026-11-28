@@ -1,5 +1,7 @@
+import { JwtAuthGuard } from '../admin/guards/jwt-auth.guard.js';
 import {
   Controller,
+  UseGuards,
   Get,
   Post,
   Body,
@@ -19,7 +21,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { PatientRegistrationsService } from './patient-registrations.service.js';
-import { CreatePatientRegistrationDto } from './dto/create-patient-registration.dto.js';
+import { CreateConsultationDto, CreatePatientRegistrationDto, LookupPatientDto } from './dto/create-patient-registration.dto.js';
 import { UpdatePatientRegistrationDto } from './dto/update-patient-registration.dto.js';
 import { QueryPatientRegistrationDto } from './dto/query-patient-registration.dto.js';
 
@@ -75,6 +77,20 @@ export class PatientRegistrationsController {
     return this.patientRegistrationsService.create(createDto);
   }
 
+  @Post('lookup')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  lookup(@Body() dto: LookupPatientDto) {
+    return this.patientRegistrationsService.lookup(dto.identifier.trim());
+  }
+
+  @Post('consultations')
+  @UseGuards(JwtAuthGuard)
+  createConsultation(@Body() dto: CreateConsultationDto) {
+    return this.patientRegistrationsService.create(dto, dto.patientId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -104,6 +120,7 @@ export class PatientRegistrationsController {
     return this.patientRegistrationsService.findAll(query);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -123,6 +140,7 @@ export class PatientRegistrationsController {
     return this.patientRegistrationsService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -145,6 +163,7 @@ export class PatientRegistrationsController {
     return this.patientRegistrationsService.update(id, updateDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
